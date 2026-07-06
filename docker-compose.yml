@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: timekeep-mongo
+    restart: unless-stopped
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
+
+  backend:
+    build: ./backend
+    container_name: timekeep-backend
+    restart: unless-stopped
+    depends_on:
+      - mongo
+    environment:
+      PORT: 5000
+      MONGO_URI: mongodb://mongo:27017/attendance_system
+      JWT_SECRET: change_this_to_a_long_random_secret
+      JWT_EXPIRES_IN: 7d
+      WORK_START_TIME: '09:00'
+      WORK_END_TIME: '18:00'
+      LATE_GRACE_MINUTES: 10
+      STANDARD_WORK_HOURS: 8
+      CLIENT_URL: http://localhost:5173
+    ports:
+      - '5000:5000'
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: http://localhost:5000/api
+    container_name: timekeep-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - '5173:5173'
+
+volumes:
+  mongo-data:
