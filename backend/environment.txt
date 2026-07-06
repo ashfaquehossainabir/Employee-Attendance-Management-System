@@ -1,6 +1,6 @@
 PORT=5000
-MONGO_URI=mongodb+srv://ashfaquehossainabirr_db_user:qR74X5owWKbXduLy@employee-attendance-man.k44ms7s.mongodb.net/?appName=employee-attendance-management
-JWT_SECRET=abc123
+MONGO_URI=Your MONGO URI
+JWT_SECRET=Your JWT SECRET
 JWT_EXPIRES_IN=7d
 
 # Work day rules used for late & overtime calculations
