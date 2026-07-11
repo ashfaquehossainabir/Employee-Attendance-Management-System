@@ -103,7 +103,12 @@ export default function Login() {
           </button>
         </form>
 
-        <div className="auth-switch">
+        <div className="auth-hint">
+          Note: To sign in on this attendance platform, you'll need to contact with 
+          your administrator. Contact- ashfaquehossainabirr@gmail.com
+        </div>
+
+        {/* <div className="auth-switch">
           {mode === 'login' ? (
             <>
               New here?{' '}
@@ -115,12 +120,12 @@ export default function Login() {
               <button onClick={() => setMode('login')}>Sign in</button>
             </>
           )}
-        </div>
+        </div> */}
 
-        <div className="auth-hint">
+        {/* <div className="auth-hint">
           Tip: run <code>npm run seed</code> in /backend to create a default
           admin@company.com account with password Admin@123.
-        </div>
+        </div> */}
       </div>
     </div>
   );
