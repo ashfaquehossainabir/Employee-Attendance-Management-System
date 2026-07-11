@@ -81,7 +81,7 @@ export default function Login() {
               value={form.email}
               onChange={update('email')}
               required
-              placeholder="you@company.com"
+              placeholder="Enter your email"
             />
           </div>
 
@@ -94,7 +94,7 @@ export default function Login() {
               onChange={update('password')}
               required
               minLength={6}
-              placeholder="••••••••"
+              placeholder="Enter your password"
             />
           </div>
 
@@ -103,7 +103,7 @@ export default function Login() {
           </button>
         </form>
 
-        <div className="auth-switch">
+        {/* <div className="auth-switch">
           {mode === 'login' ? (
             <>
               New here?{' '}
@@ -115,12 +115,12 @@ export default function Login() {
               <button onClick={() => setMode('login')}>Sign in</button>
             </>
           )}
-        </div>
+        </div> */}
 
-        <div className="auth-hint">
+        {/* <div className="auth-hint">
           Tip: run <code>npm run seed</code> in /backend to create a default
           admin@company.com account with password Admin@123.
-        </div>
+        </div> */}
       </div>
     </div>
   );
