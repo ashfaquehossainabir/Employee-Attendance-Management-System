@@ -81,7 +81,7 @@ export default function Login() {
               value={form.email}
               onChange={update('email')}
               required
-              placeholder="you@company.com"
+              placeholder="Enter your email"
             />
           </div>
 
@@ -94,7 +94,7 @@ export default function Login() {
               onChange={update('password')}
               required
               minLength={6}
-              placeholder="••••••••"
+              placeholder="Enter your password"
             />
           </div>
 
@@ -107,7 +107,7 @@ export default function Login() {
           Note: To sign in on this attendance platform, you'll need to contact with 
           your administrator. 
           <br/>
-          Contact- ashfaquehossainabirr@gmail.com
+          <span style="margin-top: 6px;">Contact- ashfaquehossainabirr@gmail.com</span>
         </div>
 
         {/* <div className="auth-switch">
