@@ -77,3 +77,10 @@ export const IconPin = (props) => (
     <path d="M12 2a5 5 0 0 0-5 5c0 3.2 3.5 6.8 4.3 9.6.1.5.9.5 1 0C13.1 13.8 17 10.2 17 7a5 5 0 0 0-5-5Zm0 7a2 2 0 1 1 0-4 2 2 0 0 1 0 4Z" />
   </svg>
 );
+
+export const IconWallet = (props) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
+    <path d="M3 7a2 2 0 0 1 2-2h13a1 1 0 0 1 1 1v3" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M3 7v10a2 2 0 0 0 2 2h14a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1h-4a2 2 0 0 0 0 4h5" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);

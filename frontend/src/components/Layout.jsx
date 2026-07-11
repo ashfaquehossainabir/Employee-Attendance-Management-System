@@ -10,6 +10,7 @@ import {
   IconMenu,
   IconCalendar,
   IconBell,
+  IconWallet,
 } from './Icons';
 
 export default function Layout() {
@@ -25,12 +26,14 @@ export default function Layout() {
         { to: '/admin/reports', label: 'Reports', icon: IconReport },
         { to: '/admin/employees', label: 'Employees', icon: IconUsers },
         { to: '/admin/leaves', label: 'Leave Requests', icon: IconCalendar },
+        { to: '/admin/payroll', label: 'Payroll', icon: IconWallet },
         { to: '/admin/notices', label: 'Notices', icon: IconBell },
       ]
     : [
         { to: '/', label: 'Clock In/Out', icon: IconClock, end: true },
         { to: '/reports', label: 'My Reports', icon: IconReport },
         { to: '/leaves', label: 'Leave Requests', icon: IconCalendar },
+        { to: '/payroll', label: 'Payroll', icon: IconWallet },
         { to: '/notices', label: 'Notices', icon: IconBell },
       ];
 

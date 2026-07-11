@@ -9,5 +9,8 @@ WORK_END_TIME=18:00
 LATE_GRACE_MINUTES=10
 STANDARD_WORK_HOURS=8
 
+# Payroll: fraction of a day's pay deducted per late arrival (0.1 = 10%)
+LATE_DEDUCTION_FRACTION=0.1
+
 # CORS - your frontend URL
 CLIENT_URL=http://localhost:5173

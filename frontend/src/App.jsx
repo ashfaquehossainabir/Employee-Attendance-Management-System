@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/Layout';
@@ -9,6 +9,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import ManageEmployees from './pages/ManageEmployees';
 import LeaveRequests from './pages/LeaveRequests';
 import Notices from './pages/Notices';
+import Payroll from './pages/Payroll';
 
 function RoleHome() {
   const { user } = useAuth();
@@ -18,7 +19,7 @@ function RoleHome() {
 export default function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
+      <HashRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
 
@@ -33,6 +34,7 @@ export default function App() {
             <Route path="/" element={<EmployeeDashboard />} />
             <Route path="/reports" element={<Reports />} />
             <Route path="/leaves" element={<LeaveRequests />} />
+            <Route path="/payroll" element={<Payroll />} />
             <Route path="/notices" element={<Notices />} />
           </Route>
 
@@ -48,6 +50,7 @@ export default function App() {
             <Route path="/admin/reports" element={<Reports />} />
             <Route path="/admin/employees" element={<ManageEmployees />} />
             <Route path="/admin/leaves" element={<LeaveRequests />} />
+            <Route path="/admin/payroll" element={<Payroll />} />
             <Route path="/admin/notices" element={<Notices />} />
           </Route>
 
@@ -60,7 +63,7 @@ export default function App() {
             }
           />
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </AuthProvider>
   );
 }

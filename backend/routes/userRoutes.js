@@ -20,7 +20,7 @@ router.get('/', protect, requireRole('admin'), async (req, res) => {
 // @desc    Admin: create a new employee (or admin) account directly
 router.post('/', protect, requireRole('admin'), async (req, res) => {
   try {
-    const { name, email, password, department, role } = req.body;
+    const { name, email, password, department, role, baseSalary, overtimeRate } = req.body;
     if (!name || !email || !password) {
       return res.status(400).json({ message: 'Name, email and password are required' });
     }
@@ -36,6 +36,8 @@ router.post('/', protect, requireRole('admin'), async (req, res) => {
       password,
       department,
       role: role === 'admin' ? 'admin' : 'employee',
+      baseSalary: Math.max(0, Number(baseSalary) || 0),
+      overtimeRate: Math.max(0, Number(overtimeRate) || 0),
     });
 
     res.status(201).json({ user: user.toSafeObject() });
@@ -48,7 +50,7 @@ router.post('/', protect, requireRole('admin'), async (req, res) => {
 // @desc    Admin: update an employee's department, role, or active status
 router.patch('/:id', protect, requireRole('admin'), async (req, res) => {
   try {
-    const { department, role, isActive, name } = req.body;
+    const { department, role, isActive, name, baseSalary, overtimeRate, currency } = req.body;
     const user = await User.findById(req.params.id);
     if (!user) return res.status(404).json({ message: 'User not found' });
 
@@ -56,6 +58,9 @@ router.patch('/:id', protect, requireRole('admin'), async (req, res) => {
     if (role !== undefined) user.role = role;
     if (isActive !== undefined) user.isActive = isActive;
     if (name !== undefined) user.name = name;
+    if (baseSalary !== undefined) user.baseSalary = Math.max(0, Number(baseSalary) || 0);
+    if (overtimeRate !== undefined) user.overtimeRate = Math.max(0, Number(overtimeRate) || 0);
+    if (currency !== undefined) user.currency = currency;
 
     await user.save();
     res.json({ user: user.toSafeObject() });

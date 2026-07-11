@@ -171,6 +171,9 @@
 .badge-cancelled { background: rgba(100, 116, 139, 0.14); color: var(--color-slate-500); }
 .badge-cancelled .badge-dot { background: var(--color-slate-500); }
 
+.badge-paid { background: rgba(47, 122, 109, 0.12); color: var(--color-teal); }
+.badge-paid .badge-dot { background: var(--color-teal); }
+
 /* ---------- Forms ---------- */
 .form-group {
   display: flex;
@@ -787,5 +790,143 @@ table.data-table {
   .leave-item-actions .btn,
   .notice-actions .btn {
     flex: 1;
+  }
+}
+
+/* ---------- Payslip ---------- */
+.payslip-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.payslip-meta {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  background: var(--color-slate-100);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  margin-bottom: 16px;
+}
+
+.payslip-meta div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.payslip-meta span {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.payslip-meta strong {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.payslip-section {
+  border-top: 1px solid var(--color-border);
+  padding: 12px 0;
+}
+
+.payslip-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 0;
+  font-size: 13.5px;
+}
+
+.payslip-row span {
+  color: var(--color-text-secondary);
+}
+
+.payslip-row strong {
+  font-family: var(--font-mono);
+}
+
+.payslip-positive {
+  color: var(--color-teal);
+}
+
+.payslip-negative {
+  color: var(--color-brick);
+}
+
+.payslip-net {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 2px solid var(--color-ink);
+  margin-top: 8px;
+  padding-top: 12px;
+}
+
+.payslip-net span {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.payslip-net strong {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  color: var(--color-ink);
+}
+
+.payslip-edit {
+  border-top: 1px dashed var(--color-border);
+  margin-top: 16px;
+  padding-top: 16px;
+}
+
+.payslip-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 480px) {
+  .payslip-meta {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Printable payslip: hide everything else on the page */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .payslip-print,
+  .payslip-print * {
+    visibility: visible;
+  }
+
+  .payslip-print {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    max-width: 100%;
+    box-shadow: none;
+    border: none;
+  }
+
+  .modal-backdrop {
+    position: static;
+    background: none;
+    padding: 0;
+  }
+
+  .no-print {
+    display: none !important;
   }
 }

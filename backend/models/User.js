@@ -40,6 +40,23 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    // Payroll configuration — set by an admin, used when generating payslips.
+    baseSalary: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    overtimeRate: {
+      // Amount paid per hour of overtime worked
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    currency: {
+      type: String,
+      default: 'USD',
+      trim: true,
+    },
   },
   { timestamps: true }
 );
@@ -89,6 +106,9 @@ userSchema.methods.toSafeObject = function () {
     department: this.department,
     employeeId: this.employeeId,
     isActive: this.isActive,
+    baseSalary: this.baseSalary,
+    overtimeRate: this.overtimeRate,
+    currency: this.currency,
     createdAt: this.createdAt,
   };
 };

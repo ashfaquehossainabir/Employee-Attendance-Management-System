@@ -10,6 +10,7 @@ const reportRoutes = require('./routes/reportRoutes');
 const userRoutes = require('./routes/userRoutes');
 const leaveRoutes = require('./routes/leaveRoutes');
 const noticeRoutes = require('./routes/noticeRoutes');
+const payrollRoutes = require('./routes/payrollRoutes');
 
 const app = express();
 
@@ -34,6 +35,7 @@ app.use('/api/reports', reportRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/leaves', leaveRoutes);
 app.use('/api/notices', noticeRoutes);
+app.use('/api/payroll', payrollRoutes);
 
 // 404 handler
 app.use((req, res) => {
