@@ -29,6 +29,7 @@ const buildPayslipFor = async (user, year, month, generatedById) => {
     year,
     month,
     currency: user.currency || 'USD',
+    joiningDate: user.joiningDate || null,
     generatedBy: generatedById,
     ...breakdown,
   });
@@ -57,8 +58,14 @@ router.post('/generate', protect, requireRole('admin'), async (req, res) => {
 
     const generated = [];
     const skipped = [];
+    const { to: periodTo } = resolveMonthRange(y, m);
 
     for (const user of targets) {
+      if (user.joiningDate && new Date(user.joiningDate) > periodTo) {
+        skipped.push({ user: user.name, reason: 'Employee had not joined yet during this period' });
+        continue;
+      }
+
       const already = await Payslip.findOne({ user: user._id, year: y, month: m });
       if (already) {
         skipped.push({ user: user.name, reason: 'Payslip already exists for this period' });
@@ -149,7 +156,7 @@ router.patch('/:id', protect, requireRole('admin'), async (req, res) => {
     payslip.netPay = Math.max(
       0,
       Math.round(
-        (payslip.baseSalary +
+        (payslip.earnedSalary +
           payslip.overtimePay +
           payslip.bonus -
           payslip.absentDeduction -

@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 import api from '../api/axios';
+import { formatMoney } from '../utils/format';
+
+const todayISO = () => new Date().toISOString().slice(0, 10);
 
 const emptyForm = {
   name: '',
@@ -9,15 +12,22 @@ const emptyForm = {
   role: 'employee',
   baseSalary: '',
   overtimeRate: '',
+  joiningDate: todayISO(),
+  weekendDays: [0, 6],
 };
 
-const fmtMoney = (amount, currency = 'USD') => {
-  try {
-    return new Intl.NumberFormat(undefined, { style: 'currency', currency }).format(amount || 0);
-  } catch {
-    return `${(amount || 0).toFixed(2)} ${currency}`;
-  }
-};
+const DAY_LABELS = [
+  { value: 0, label: 'Sun' },
+  { value: 1, label: 'Mon' },
+  { value: 2, label: 'Tue' },
+  { value: 3, label: 'Wed' },
+  { value: 4, label: 'Thu' },
+  { value: 5, label: 'Fri' },
+  { value: 6, label: 'Sat' },
+];
+
+const fmtDate = (d) =>
+  d ? new Date(d).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
 
 export default function ManageEmployees() {
   const [users, setUsers] = useState([]);
@@ -46,6 +56,14 @@ export default function ManageEmployees() {
 
   const update = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.value }));
 
+  const toggleWeekendDay = (day) => {
+    setForm((f) => {
+      const has = f.weekendDays.includes(day);
+      const weekendDays = has ? f.weekendDays.filter((d) => d !== day) : [...f.weekendDays, day];
+      return { ...f, weekendDays };
+    });
+  };
+
   const openCreate = () => {
     setEditingUser(null);
     setForm(emptyForm);
@@ -62,6 +80,8 @@ export default function ManageEmployees() {
       role: user.role,
       baseSalary: user.baseSalary ?? '',
       overtimeRate: user.overtimeRate ?? '',
+      joiningDate: user.joiningDate ? user.joiningDate.slice(0, 10) : todayISO(),
+      weekendDays: user.weekendDays?.length ? user.weekendDays : [0, 6],
     });
     setShowModal(true);
   };
@@ -78,6 +98,8 @@ export default function ManageEmployees() {
           role: form.role,
           baseSalary: form.baseSalary,
           overtimeRate: form.overtimeRate,
+          joiningDate: form.joiningDate,
+          weekendDays: form.weekendDays,
         });
       } else {
         await api.post('/users', form);
@@ -116,7 +138,7 @@ export default function ManageEmployees() {
       <div className="page-header">
         <div>
           <h1>Employees</h1>
-          <p>Manage accounts, roles, access, and salary configuration.</p>
+          <p>Manage accounts, roles, joining dates, weekends, and salary configuration.</p>
         </div>
         <button className="btn btn-primary" onClick={openCreate}>
           + Add employee
@@ -135,9 +157,9 @@ export default function ManageEmployees() {
                 <tr>
                   <th>Employee</th>
                   <th>ID</th>
-                  <th>Email</th>
                   <th>Department</th>
-                  <th>Role</th>
+                  <th>Joined</th>
+                  <th>Weekend</th>
                   <th>Base salary</th>
                   <th>Status</th>
                   <th></th>
@@ -153,10 +175,16 @@ export default function ManageEmployees() {
                       </div>
                     </td>
                     <td className="mono-cell">{u.employeeId}</td>
-                    <td>{u.email}</td>
                     <td>{u.department}</td>
-                    <td style={{ textTransform: 'capitalize' }}>{u.role}</td>
-                    <td className="mono-cell">{fmtMoney(u.baseSalary, u.currency)}/mo</td>
+                    <td className="mono-cell">{fmtDate(u.joiningDate)}</td>
+                    <td className="mono-cell">
+                      {(u.weekendDays || [0, 6])
+                        .slice()
+                        .sort()
+                        .map((d) => DAY_LABELS.find((x) => x.value === d)?.label)
+                        .join(', ')}
+                    </td>
+                    <td className="mono-cell">{formatMoney(u.baseSalary, u.currency)}/mo</td>
                     <td>
                       <span className={`badge ${u.isActive ? 'badge-present' : 'badge-absent'}`}>
                         <span className="badge-dot" />
@@ -259,6 +287,35 @@ export default function ManageEmployees() {
                     onChange={update('overtimeRate')}
                   />
                 </div>
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Joining date</label>
+                <input
+                  className="form-input"
+                  type="date"
+                  value={form.joiningDate}
+                  onChange={update('joiningDate')}
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Weekend days</label>
+                <div className="weekday-picker">
+                  {DAY_LABELS.map((d) => (
+                    <button
+                      type="button"
+                      key={d.value}
+                      className={`weekday-chip ${form.weekendDays.includes(d.value) ? 'active' : ''}`}
+                      onClick={() => toggleWeekendDay(d.value)}
+                    >
+                      {d.label}
+                    </button>
+                  ))}
+                </div>
+                <span className="card-subtitle" style={{ marginTop: 4 }}>
+                  These days are excluded from working-day and payroll calculations for this employee.
+                </span>
               </div>
 
               <div style={{ display: 'flex', gap: 10, marginTop: 8 }}>

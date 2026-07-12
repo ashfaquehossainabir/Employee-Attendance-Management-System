@@ -104,10 +104,8 @@ export default function Login() {
         </form>
 
         <div className="auth-hint">
-          Note: To sign in on this attendance platform, you'll need to contact with 
+          Note: To get access on this attendance platform, you'll need to contact with 
           your administrator. 
-          <br/><br/>
-          Contact- ashfaquehossainabirr@gmail.com
         </div>
 
         {/* <div className="auth-switch">

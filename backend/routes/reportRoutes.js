@@ -178,6 +178,18 @@ router.get('/overview', protect, requireRole('admin'), async (req, res) => {
     const lateToday = todayRecords.filter((r) => r.isLate).length;
     const notClockedInYet = Math.max(0, totalEmployees - todayRecords.length);
 
+    const now = new Date();
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const newHiresThisMonth = await User.countDocuments({
+      role: 'employee',
+      joiningDate: { $gte: monthStart },
+    });
+
+    const recentJoiners = await User.find({ role: 'employee', isActive: true })
+      .sort({ joiningDate: -1 })
+      .limit(5)
+      .select('name employeeId department joiningDate');
+
     res.json({
       totalEmployees,
       presentToday: todayRecords.length,
@@ -185,6 +197,8 @@ router.get('/overview', protect, requireRole('admin'), async (req, res) => {
       clockedOut,
       lateToday,
       notClockedInYet,
+      newHiresThisMonth,
+      recentJoiners,
       todayRecords,
     });
   } catch (err) {

@@ -26,7 +26,14 @@ const payslipSchema = new mongoose.Schema(
     // Snapshot of pay configuration at generation time (salary changes later
     // shouldn't silently rewrite historical payslips)
     baseSalary: { type: Number, required: true, default: 0 },
+    earnedSalary: { type: Number, required: true, default: 0 },
     overtimeRate: { type: Number, required: true, default: 0 },
+    weekendDays: { type: [Number], default: [0, 6] },
+
+    // Snapshot of the employee's joining date, and whether this payslip
+    // was prorated because they joined partway through the period
+    joiningDate: { type: Date, default: null },
+    prorated: { type: Boolean, default: false },
 
     // Attendance summary the payslip was computed from
     workingDays: { type: Number, default: 0 },

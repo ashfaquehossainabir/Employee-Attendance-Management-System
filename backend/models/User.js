@@ -57,6 +57,23 @@ const userSchema = new mongoose.Schema(
       default: 'USD',
       trim: true,
     },
+    // The date the employee started — used to prorate their first payslip
+    // and to stop payroll being generated for periods before they joined.
+    joiningDate: {
+      type: Date,
+      default: Date.now,
+    },
+    // Which days of the week are this employee's weekend (0 = Sunday ...
+    // 6 = Saturday). Defaults to Sat/Sun but lets an admin configure e.g.
+    // a Fri/Sat weekend for employees on a different schedule.
+    weekendDays: {
+      type: [Number],
+      default: [0, 6],
+      validate: {
+        validator: (arr) => arr.every((d) => Number.isInteger(d) && d >= 0 && d <= 6),
+        message: 'weekendDays must contain integers between 0 (Sun) and 6 (Sat)',
+      },
+    },
   },
   { timestamps: true }
 );
@@ -109,6 +126,8 @@ userSchema.methods.toSafeObject = function () {
     baseSalary: this.baseSalary,
     overtimeRate: this.overtimeRate,
     currency: this.currency,
+    joiningDate: this.joiningDate,
+    weekendDays: this.weekendDays,
     createdAt: this.createdAt,
   };
 };

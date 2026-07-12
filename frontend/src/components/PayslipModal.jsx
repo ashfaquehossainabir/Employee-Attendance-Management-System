@@ -2,17 +2,9 @@ import { useState } from 'react';
 import { formatMoney, monthName } from '../utils/format';
 import StatusBadge from './StatusBadge';
 
-export default function PayslipModal({
-  payslip,
-  isAdmin,
-  onClose,
-  onSaveAdjustments,
-  onMarkPaid,
-}) {
+export default function PayslipModal({ payslip, isAdmin, onClose, onSaveAdjustments, onMarkPaid }) {
   const [bonus, setBonus] = useState(payslip.bonus || 0);
-  const [otherDeductions, setOtherDeductions] = useState(
-    payslip.otherDeductions || 0
-  );
+  const [otherDeductions, setOtherDeductions] = useState(payslip.otherDeductions || 0);
   const [notes, setNotes] = useState(payslip.notes || '');
   const [saving, setSaving] = useState(false);
 
@@ -23,7 +15,6 @@ export default function PayslipModal({
 
   const handleSave = async () => {
     setSaving(true);
-
     try {
       await onSaveAdjustments(payslip._id, {
         bonus: Number(bonus) || 0,
@@ -37,17 +28,7 @@ export default function PayslipModal({
 
   return (
     <div className="modal-backdrop" onClick={onClose}>
-      <div
-        className="modal-card payslip-print"
-        style={{
-          maxWidth: 520,
-          width: '100%',
-          maxHeight: '90vh',
-          overflowY: 'auto',
-          overflowX: 'hidden',
-        }}
-        onClick={(e) => e.stopPropagation()}
-      >
+      <div className="modal-card payslip-print" style={{ maxWidth: 520 }} onClick={(e) => e.stopPropagation()}>
         <div className="payslip-header">
           <div>
             <div className="eyebrow">Payslip</div>
@@ -55,7 +36,6 @@ export default function PayslipModal({
               {monthName(payslip.month)} {payslip.year}
             </h2>
           </div>
-
           <StatusBadge status={payslip.status} />
         </div>
 
@@ -64,44 +44,50 @@ export default function PayslipModal({
             <span>Employee</span>
             <strong>{payslip.user?.name}</strong>
           </div>
-
           <div>
             <span>Employee ID</span>
             <strong>{payslip.user?.employeeId}</strong>
           </div>
-
           <div>
             <span>Department</span>
             <strong>{payslip.user?.department}</strong>
           </div>
+          {payslip.joiningDate && (
+            <div>
+              <span>Joined</span>
+              <strong>{new Date(payslip.joiningDate).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })}</strong>
+            </div>
+          )}
         </div>
+
+        {payslip.prorated && (
+          <div className="leave-item-note" style={{ marginBottom: 12 }}>
+            Prorated — this employee joined partway through the period, so pay is
+            scaled to the {payslip.workingDays} working day{payslip.workingDays === 1 ? '' : 's'} actually employed.
+          </div>
+        )}
 
         <div className="payslip-section">
           <div className="payslip-row">
-            <span>Working days</span>
+            <span>Working days (employed)</span>
             <strong>{payslip.workingDays}</strong>
           </div>
-
           <div className="payslip-row">
             <span>Present days</span>
             <strong>{payslip.presentDays}</strong>
           </div>
-
           <div className="payslip-row">
             <span>Approved paid leave</span>
             <strong>{payslip.paidLeaveDays}</strong>
           </div>
-
           <div className="payslip-row">
             <span>Absent days</span>
             <strong>{payslip.absentDays}</strong>
           </div>
-
           <div className="payslip-row">
             <span>Late arrivals</span>
             <strong>{payslip.lateDays}</strong>
           </div>
-
           <div className="payslip-row">
             <span>Overtime hours</span>
             <strong>{payslip.overtimeHours}h</strong>
@@ -110,43 +96,32 @@ export default function PayslipModal({
 
         <div className="payslip-section">
           <div className="payslip-row">
-            <span>Base salary</span>
+            <span>Configured monthly salary</span>
             <strong>{formatMoney(payslip.baseSalary, currency)}</strong>
           </div>
-
+          <div className="payslip-row">
+            <span>{payslip.prorated ? 'Earned salary (prorated)' : 'Earned salary'}</span>
+            <strong>{formatMoney(payslip.earnedSalary, currency)}</strong>
+          </div>
           <div className="payslip-row">
             <span>Overtime pay</span>
-            <strong className="payslip-positive">
-              +{formatMoney(payslip.overtimePay, currency)}
-            </strong>
+            <strong className="payslip-positive">+{formatMoney(payslip.overtimePay, currency)}</strong>
           </div>
-
           <div className="payslip-row">
             <span>Bonus</span>
-            <strong className="payslip-positive">
-              +{formatMoney(payslip.bonus, currency)}
-            </strong>
+            <strong className="payslip-positive">+{formatMoney(payslip.bonus, currency)}</strong>
           </div>
-
           <div className="payslip-row">
             <span>Absent deduction</span>
-            <strong className="payslip-negative">
-              -{formatMoney(payslip.absentDeduction, currency)}
-            </strong>
+            <strong className="payslip-negative">-{formatMoney(payslip.absentDeduction, currency)}</strong>
           </div>
-
           <div className="payslip-row">
             <span>Late deduction</span>
-            <strong className="payslip-negative">
-              -{formatMoney(payslip.lateDeduction, currency)}
-            </strong>
+            <strong className="payslip-negative">-{formatMoney(payslip.lateDeduction, currency)}</strong>
           </div>
-
           <div className="payslip-row">
             <span>Other deductions</span>
-            <strong className="payslip-negative">
-              -{formatMoney(payslip.otherDeductions, currency)}
-            </strong>
+            <strong className="payslip-negative">-{formatMoney(payslip.otherDeductions, currency)}</strong>
           </div>
         </div>
 
@@ -155,16 +130,13 @@ export default function PayslipModal({
           <strong>{formatMoney(payslip.netPay, currency)}</strong>
         </div>
 
-        {payslip.notes && !isAdmin && (
-          <div className="leave-item-note">{payslip.notes}</div>
-        )}
+        {payslip.notes && !isAdmin && <div className="leave-item-note">{payslip.notes}</div>}
 
         {isAdmin && isPending && (
           <div className="payslip-edit no-print">
             <div className="form-row">
               <div className="form-group">
                 <label className="form-label">Bonus</label>
-
                 <input
                   className="form-input"
                   type="number"
@@ -174,10 +146,8 @@ export default function PayslipModal({
                   onChange={(e) => setBonus(e.target.value)}
                 />
               </div>
-
               <div className="form-group">
                 <label className="form-label">Other deductions</label>
-
                 <input
                   className="form-input"
                   type="number"
@@ -188,53 +158,26 @@ export default function PayslipModal({
                 />
               </div>
             </div>
-
             <div className="form-group">
-              <label className="form-label">
-                Notes (visible to employee)
-              </label>
-
-              <input
-                className="form-input"
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-              />
+              <label className="form-label">Notes (visible to employee)</label>
+              <input className="form-input" value={notes} onChange={(e) => setNotes(e.target.value)} />
             </div>
-
-            <button
-              className="btn btn-ghost btn-block"
-              onClick={handleSave}
-              disabled={saving}
-            >
+            <button className="btn btn-ghost btn-block" onClick={handleSave} disabled={saving}>
               {saving ? 'Saving…' : 'Save adjustments'}
             </button>
           </div>
         )}
 
         <div className="payslip-actions no-print">
-          <button
-            className="btn btn-ghost"
-            onClick={handlePrint}
-            style={{ flex: 1 }}
-          >
+          <button className="btn btn-ghost" onClick={handlePrint} style={{ flex: 1 }}>
             Print / Save PDF
           </button>
-
           {isAdmin && isPending && (
-            <button
-              className="btn btn-primary"
-              onClick={() => onMarkPaid(payslip._id)}
-              style={{ flex: 1 }}
-            >
+            <button className="btn btn-primary" onClick={() => onMarkPaid(payslip._id)} style={{ flex: 1 }}>
               Mark as paid
             </button>
           )}
-
-          <button
-            className="btn btn-ghost"
-            onClick={onClose}
-            style={{ flex: 1 }}
-          >
+          <button className="btn btn-ghost" onClick={onClose} style={{ flex: 1 }}>
             Close
           </button>
         </div>
